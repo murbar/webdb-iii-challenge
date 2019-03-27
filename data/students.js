@@ -8,7 +8,9 @@ module.exports = {
   },
   getById: function(id) {
     return db(table)
-      .where({ id })
+      .join('cohorts', 'students.cohort_id', 'cohorts.id')
+      .select('students.id', 'students.name', 'cohorts.name as cohort')
+      .where({ 'students.id': id })
       .first();
   },
   getByCohortId: function(cohort_id) {
