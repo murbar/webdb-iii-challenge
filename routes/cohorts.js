@@ -1,5 +1,5 @@
 const express = require('express');
-const db = require('../data/cohorts');
+const studentsDb = require('../data/students');
 
 const router = express.Router();
 
@@ -25,6 +25,17 @@ router.get('/:id', async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: 'Cannot get cohort.' });
+  }
+});
+
+router.get('/:id/students', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const students = await studentsDb.getByCohortId(id);
+    res.status(200).json(students);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Cannot get students.' });
   }
 });
 
