@@ -1,11 +1,12 @@
 const express = require('express');
+const cohortsDb = require('../data/cohorts');
 const studentsDb = require('../data/students');
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const cohorts = await db.getAll();
+    const cohorts = await cohortsDb.getAll();
     res.status(200).json(cohorts);
   } catch (error) {
     console.log(error);
@@ -16,7 +17,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const cohort = await db.getById(id);
+    const cohort = await cohortsDb.getById(id);
     if (!cohort) {
       res.status(404).json({ error: 'No cohort with that ID.' });
     } else {
@@ -45,8 +46,8 @@ router.post('/', async (req, res) => {
     if (!cohort.name) {
       res.status(400).json({ error: 'Please provide a name for the cohort.' });
     } else {
-      const [newCohortId] = await db.create(cohort);
-      const newCohort = await db.getById(newCohortId);
+      const [newCohortId] = await cohortsDb.create(cohort);
+      const newCohort = await cohortsDb.getById(newCohortId);
       res.status(201).json(newCohort);
     }
   } catch (error) {
@@ -62,7 +63,7 @@ router.put('/:id', async (req, res) => {
     if (!cohortUpdates.name) {
       res.status(400).json({ error: 'Please provide a name for the cohort.' });
     } else {
-      const updatedCount = await db.update(id, cohortUpdates);
+      const updatedCount = await cohortsDb.update(id, cohortUpdates);
       if (!updatedCount) {
         res.status(404).json({ error: 'The cohort with the specified ID does not exist.' });
       } else {
@@ -78,11 +79,11 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const cohort = await db.getById(id);
+    const cohort = await cohortsDb.getById(id);
     if (!cohort) {
       res.status(404).json({ error: 'The cohort with the specified ID does not exist.' });
     } else {
-      await db.delete(id);
+      await cohortsDb.delete(id);
       res.status(204).end();
     }
   } catch (error) {
